@@ -45,6 +45,8 @@ void win32_seh_set_handler(int type, MonoW32ExceptionHandler handler);
 
 LONG CALLBACK seh_handler(EXCEPTION_POINTERS* ep);
 
+#define MONO_ARCH_NOMAP32BIT
+
 #endif /* PLATFORM_WIN32 */
 
 #ifdef sun    // Solaris x86
