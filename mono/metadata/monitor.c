@@ -596,6 +596,15 @@ retry_contended:
 	
 	InterlockedIncrement (&mon->entry_count);
 
+	// work around race between checking owner and incrementing entry_count
+	if (G_LIKELY (InterlockedCompareExchangePointer ((gpointer *)&mon->owner, (gpointer)id, 0) == 0)) {
+		/* Success */
+		g_assert (mon->nest == 1);
+		InterlockedDecrement (&mon->entry_count);
+		mono_profiler_monitor_event (obj, MONO_PROFILER_MONITOR_DONE);
+		return 1;
+	}
+
 	mono_perfcounters->thread_queue_len++;
 	mono_perfcounters->thread_queue_max++;
 	thread = mono_thread_current ();
