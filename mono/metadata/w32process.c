@@ -88,18 +88,20 @@ mono_w32process_ver_language_name (guint32 lang, gunichar2 *lang_out, guint32 la
 #endif /* G_HAVE_API_SUPPORT(HAVE_CLASSIC_WINAPI_SUPPORT) && defined(HOST_WIN32) */
 
 static MonoImage *system_image;
+static MonoClass *file_version_info_class;
+static MonoClass *process_module_class;
 
 static void
 stash_system_image (MonoImage *image)
 {
 	system_image = image;
+	file_version_info_class = NULL;
+	process_module_class = NULL;
 }
 
 static MonoClass*
 get_file_version_info_class (void)
 {
-	static MonoClass *file_version_info_class;
-
 	if (file_version_info_class)
 		return file_version_info_class;
 
@@ -112,8 +114,6 @@ get_file_version_info_class (void)
 static MonoClass*
 get_process_module_class (void)
 {
-	static MonoClass *process_module_class;
-
 	if (process_module_class)
 		return process_module_class;
 
